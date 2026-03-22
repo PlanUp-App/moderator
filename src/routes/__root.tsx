@@ -1,5 +1,6 @@
 import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
 import type { AuthState } from "../auth/AuthContext";
+import { Toaster } from "sonner";
 
 interface MyRouterContext {
   auth: AuthState;
