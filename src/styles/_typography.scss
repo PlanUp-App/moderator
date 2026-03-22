@@ -1,0 +1,91 @@
+@use "functions";
+@use "variables";
+@import url("https://fonts.googleapis.com/css2?family=Karla:wght@400;500;700&family=Montserrat:wght@400;500;600;700&display=swap");
+
+.pup {
+  // ----------------------
+  // Headings (Montserrat)
+  // ----------------------
+  &-heading-one {
+    font-family: "Montserrat", sans-serif;
+    font-size: 86px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1; // use unitless
+  }
+
+  &-heading-two {
+    font-family: "Montserrat", sans-serif;
+    font-size: 64px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  &-heading-three {
+    font-family: "Montserrat", sans-serif;
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  // ----------------------
+  // Body (Karla)
+  // ----------------------
+  &-body-xl-700 {
+    font-family: "Karla", sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.2;
+  }
+
+  &-body-xl-400 {
+    font-family: "Karla", sans-serif;
+    font-size: 26px;
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 1.2;
+  }
+
+  &-body-lg-500 {
+    font-family: "Karla", sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1.2;
+  }
+
+  &-body-md-500 {
+    font-family: "Karla", sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1.5;
+  }
+
+  &-body-md-400 {
+    font-family: "Karla", sans-serif;
+    font-size: 17px;
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 1.5;
+  }
+
+  &-body-sm-400 {
+    font-family: "Karla", sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    line-height: 1.5;
+  }
+
+  &-body-tag {
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+  }
+}
