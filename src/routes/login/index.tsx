@@ -69,10 +69,10 @@ function Index() {
         <div className="w-120 pt-2 pb-6 flex flex-col gap-8 h-fit">
           <div>
             <h1 className="pup-heading-two mb-6 text-neutral-black text-center">
-              Login
+              PlanUp Moderator
             </h1>
             <p className="pup-body-md-400 text-neutral-black text-center">
-              Login now to access your account and start planning
+              Login now to access your account
             </p>
           </div>
           <form onSubmit={onSubmit(handleSubmit)}>
@@ -80,7 +80,7 @@ function Index() {
               className="mb-6"
               label="Email"
               type="text"
-              placeholder="user@example.com"
+              placeholder="admin@planup.com"
               inputProps={getInputProps("email")}
             />
             <CustomInput
