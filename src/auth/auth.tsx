@@ -78,7 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   >({
     mutationFn: async (credentials: LoginCredentials) => {
       const response = await axiosInstance.post<LoginResponse>(
-        "/auth/login",
+        "/admin/auth/login",
         credentials,
       );
       return response.data;

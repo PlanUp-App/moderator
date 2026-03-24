@@ -1,4 +1,4 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { AxiosError } from "axios";
 import { useState } from "react";
 import { PrimaryButton } from "../../components/Button/primary-filled";
@@ -30,7 +30,7 @@ type LoginForm = z.infer<typeof loginSchema>;
 
 function Index() {
   const { auth } = Route.useRouteContext();
-  const redirect = Route.useSearch().redirect || "/my-plans";
+  const redirect = Route.useSearch().redirect || "/dashboard";
   const [isLoading, setIsLoading] = useState(false);
 
   const { getInputProps, onSubmit } = useForm<LoginForm>({
@@ -48,6 +48,7 @@ function Index() {
           toast.success("Login Successful");
           console.log(redirect);
           router.navigate({ to: redirect });
+          setIsLoading(false);
         },
         onError: (err: unknown) => {
           let message = "Something went wrong";
@@ -58,6 +59,7 @@ function Index() {
           }
           console.log(err);
           toast.error(message);
+          setIsLoading(false);
         },
       },
     );
