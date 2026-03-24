@@ -87,3 +87,15 @@ export function useTakeAction(reportId: string) {
       toast.error(e?.response?.data?.message ?? "Failed to take action"),
   });
 }
+
+export const useGetReportById = (reportId: string) => {
+  return useQuery<Report>({
+    queryKey: ["report", reportId],
+    queryFn: async () => {
+      const res = await axiosInstance.get<Report>(`/admin/reports/${reportId}`);
+      return res.data;
+    },
+    enabled: !!reportId,
+    staleTime: 1000 * 60 * 2,
+  });
+};
