@@ -1,0 +1,275 @@
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { MdOutlineSearch } from "react-icons/md";
+import { useGetAllClients } from "./-queries"; // Adjust path as needed
+import { ProfileAvatar } from "@/components/PreviewImage";
+import { formatDistanceToNow } from "date-fns";
+
+export const Route = createFileRoute("/_authenticated/users/")({
+  component: RouteComponent,
+});
+
+const statusConfig = {
+  ACTIVE: {
+    label: "Active",
+    className: "bg-green-50 text-green-700 border-green-200",
+  },
+  SUSPENDED: {
+    label: "Suspended",
+    className: "bg-red-50 text-red-700 border-red-200",
+  },
+  UNVERIFIED: {
+    label: "Unverified",
+    className: "bg-amber-50 text-amber-700 border-amber-200",
+  },
+};
+
+function getStatus(user: any): keyof typeof statusConfig {
+  if (user.suspendedTill && new Date(user.suspendedTill) > new Date()) {
+    return "SUSPENDED";
+  }
+  if (!user.verifiedAt) {
+    return "UNVERIFIED";
+  }
+  return "ACTIVE";
+}
+
+export default function RouteComponent() {
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [page, setPage] = useState(1);
+
+  const { data, isLoading } = useGetAllClients({
+    search: search || undefined,
+    status: statusFilter === "all" ? undefined : statusFilter,
+    page,
+    limit: 20,
+  });
+
+  const totalPages = data ? Math.ceil(data.total / 20) : 1;
+
+  return (
+    <div className="p-8 flex flex-col gap-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div>
+            <h1 className="pup-heading-three text-neutral-black">Users</h1>
+            <p className="pup-body-sm-400 text-neutral-dark-grey">
+              {data?.total ?? 0} total users
+            </p>
+          </div>
+        </div>
+
+        {/* Filters & Search */}
+        <div className="flex items-center gap-3">
+          {/* Search */}
+          <div className="relative">
+            <MdOutlineSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 h-4 w-4" />
+            <Input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search users..."
+              className="w-72 h-12 pl-10 pup-body-md-400 rounded-xl border-2 border-neutral-200 focus:border-primary-orange"
+            />
+          </div>
+
+          {/* Status Filter */}
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-44 min-h-12 cursor-pointer px-4 flex-1 pup-body-md-400 rounded-xl border-2 border-neutral-200 hover:border-neutral-300 hover:shadow-sm">
+              <SelectValue placeholder="All statuses" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem
+                value="all"
+                className="pup-body-md-400 h-12 px-4 cursor-pointer"
+              >
+                All statuses
+              </SelectItem>
+              <SelectItem
+                value="ACTIVE"
+                className="pup-body-md-400 h-12 px-4 cursor-pointer"
+              >
+                Active
+              </SelectItem>
+              <SelectItem
+                value="SUSPENDED"
+                className="pup-body-md-400 h-12 px-4 cursor-pointer"
+              >
+                Suspended
+              </SelectItem>
+              <SelectItem
+                value="UNVERIFIED"
+                className="pup-body-md-400 h-12 px-4 cursor-pointer"
+              >
+                Unverified
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="rounded-2xl border border-neutral-100 overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-neutral-50 hover:bg-neutral-50">
+              <TableHead className="pup-body-sm-500 text-neutral-dark-grey">
+                User
+              </TableHead>
+              <TableHead className="pup-body-sm-500 text-neutral-dark-grey">
+                Email
+              </TableHead>
+              <TableHead className="pup-body-sm-500 text-neutral-dark-grey">
+                Provider
+              </TableHead>
+              <TableHead className="pup-body-sm-500 text-neutral-dark-grey">
+                Status
+              </TableHead>
+              <TableHead className="pup-body-sm-500 text-neutral-dark-grey">
+                Plan Memberships
+              </TableHead>
+              <TableHead className="pup-body-sm-500 text-neutral-dark-grey">
+                Reports Received
+              </TableHead>
+              <TableHead className="pup-body-sm-500 text-neutral-dark-grey">
+                Date Joined
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i}>
+                  {Array.from({ length: 7 }).map((_, j) => (
+                    <TableCell key={j}>
+                      <div className="h-8 w-24 animate-pulse rounded bg-neutral-100" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : data?.users.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={7} className="h-24">
+                  <div className="flex flex-col items-center py-12 text-center gap-2">
+                    <MdOutlineSearch className="size-8 text-neutral-300" />
+                    <p className="pup-body-sm-400 text-neutral-dark-grey">
+                      No users found
+                    </p>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : (
+              data?.users.map((user) => {
+                const status = getStatus(user);
+                return (
+                  <TableRow
+                    key={user.id}
+                    className="cursor-pointer hover:bg-neutral-50 py-4"
+                    onClick={() =>
+                      navigate({
+                        to: "/admin/users/$userId",
+                        params: { userId: user.id },
+                      })
+                    }
+                  >
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <ProfileAvatar
+                          alt={user.name}
+                          src={user.profilePicture}
+                        />
+                        <div>
+                          <p className="pup-body-md-500 text-neutral-dark-grey">
+                            {user.name}
+                          </p>
+                          <p className="text-xs text-neutral-500 pup-body-sm-400">
+                            {user.email}
+                          </p>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="pup-body-sm-400 text-neutral-dark-grey">
+                      {user.email}
+                    </TableCell>
+                    <TableCell>
+                      <span className="rounded-full bg-neutral-100 px-3 py-1 pup-body-sm-500 text-neutral-dark-grey text-xs">
+                        {user.provider}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          "pup-body-lg-500 h-8 px-4",
+                          statusConfig[status].className,
+                        )}
+                      >
+                        {statusConfig[status].label}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="pup-body-sm-500 font-medium text-neutral-black">
+                      {user._count.planMemberships}
+                    </TableCell>
+                    <TableCell className="pup-body-sm-500 font-medium text-neutral-black">
+                      {user._count.reportsReceived}
+                    </TableCell>
+                    <TableCell className="pup-body-sm-400 text-neutral-dark-grey">
+                      {formatDistanceToNow(new Date(user.createdAt), {
+                        addSuffix: true,
+                      })}
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between">
+          <p className="pup-body-sm-400 text-neutral-dark-grey">
+            Page {page} of {totalPages}
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="rounded-xl border-2 border-neutral-200 px-4 py-2 pup-body-sm-400 text-neutral-dark-grey hover:bg-neutral-50 hover:border-neutral-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="rounded-xl border-2 border-neutral-200 px-4 py-2 pup-body-sm-400 text-neutral-dark-grey hover:bg-neutral-50 hover:border-neutral-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
