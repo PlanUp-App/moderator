@@ -58,8 +58,8 @@ export function AdminSidebar() {
             icon={MdOutlineDashboard}
             label="Dashboard"
           />
-          <NavItem to="/users" icon={MdOutlinePeopleAlt} label="Users" />
           <NavItem to="/reports" icon={MdOutlineFlag} label="Reports" />
+          <NavItem to="/users" icon={MdOutlinePeopleAlt} label="Users" />
         </SidebarMenu>
       </SidebarContent>
     </Sidebar>
