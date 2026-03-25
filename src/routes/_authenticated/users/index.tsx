@@ -19,11 +19,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { MdOutlineSearch } from "react-icons/md";
 import { ProfileAvatar } from "@/components/PreviewImage";
-<<<<<<< HEAD
 import { format } from "date-fns";
-=======
-import { formatDistanceToNow } from "date-fns";
->>>>>>> 2e6517762e244764d67309713bec4e378c2619af
 import { useGetAllClients, type UserStatus } from "./-queries";
 import { SearchInput } from "@/components/CustomInput/search-input";
 
