@@ -19,7 +19,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { MdOutlineSearch } from "react-icons/md";
 import { ProfileAvatar } from "@/components/PreviewImage";
-import { formatDistanceToNow } from "date-fns";
+import { format } from "date-fns";
 import { useGetAllClients, type UserStatus } from "./-queries";
 import { SearchInput } from "@/components/CustomInput/search-input";
 
@@ -222,9 +222,7 @@ export default function RouteComponent() {
                       {user._count.reportsReceived}
                     </TableCell>
                     <TableCell className="pup-body-sm-400 text-neutral-dark-grey">
-                      {formatDistanceToNow(new Date(user.createdAt), {
-                        addSuffix: false,
-                      })}
+                      {format(new Date(user.createdAt), "MMM dd, yyyy")}
                     </TableCell>
                   </TableRow>
                 );
