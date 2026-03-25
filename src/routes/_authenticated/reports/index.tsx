@@ -14,7 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -22,16 +21,9 @@ import { MdOutlineSearch } from "react-icons/md";
 import {
   type ReportStatus,
   type ReportCategory,
-  type ModerationActionType,
-  useUpdateStatus,
-  useTakeAction,
   useGetReports,
-  type Report,
 } from "./-queries";
 import { ProfileAvatar } from "@/components/PreviewImage";
-import { PrimaryButton } from "@/components/Button/primary-filled";
-import { OutlineButton } from "@/components/Button/outline";
-import { DatePicker } from "@/components/DatePicker";
 import { formatDistanceToNow } from "date-fns";
 
 export const Route = createFileRoute("/_authenticated/reports/")({
@@ -96,31 +88,84 @@ export default function RouteComponent() {
         {/* Filters */}
         <div className="flex items-center gap-2">
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-36 rounded-xl border-neutral-200 h-9 pup-body-sm-400">
-              <SelectValue placeholder="Status" />
+            <SelectTrigger className="w-44 min-h-12 cursor-pointer px-4 flex-1 pup-body-md-400 rounded-xl border-2 border-neutral-200 hover:border-neutral-300 hover:shadow-sm">
+              <SelectValue placeholder="All statuses" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All statuses</SelectItem>
-              <SelectItem value="PENDING">Pending</SelectItem>
-              <SelectItem value="UNDER_REVIEW">Under review</SelectItem>
-              <SelectItem value="RESOLVED">Resolved</SelectItem>
-              <SelectItem value="DISMISSED">Dismissed</SelectItem>
+              <SelectItem
+                value="all"
+                className="pup-body-md-400 h-12 px-4 cursor-pointer"
+              >
+                All statuses
+              </SelectItem>
+              <SelectItem
+                value="PENDING"
+                className="pup-body-md-400 h-12 px-4 cursor-pointer"
+              >
+                Pending
+              </SelectItem>
+              <SelectItem
+                value="UNDER_REVIEW"
+                className="pup-body-md-400 h-12 px-4 cursor-pointer"
+              >
+                Under review
+              </SelectItem>
+              <SelectItem
+                value="RESOLVED"
+                className="pup-body-md-400 h-12 px-4 cursor-pointer"
+              >
+                Resolved
+              </SelectItem>
+              <SelectItem
+                value="DISMISSED"
+                className="pup-body-md-400 h-12 px-4 cursor-pointer"
+              >
+                Dismissed
+              </SelectItem>
             </SelectContent>
           </Select>
 
           <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="w-44 rounded-xl border-neutral-200 h-9 pup-body-sm-400">
-              <SelectValue placeholder="Category" />
+            <SelectTrigger className="w-56 min-h-12 cursor-pointer px-4 flex-1 pup-body-md-400 rounded-xl border-2 border-neutral-200 hover:border-neutral-300 hover:shadow-sm">
+              <SelectValue placeholder="All categories" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All categories</SelectItem>
-              <SelectItem value="SPAM">Spam</SelectItem>
-              <SelectItem value="HARASSMENT">Harassment</SelectItem>
-              <SelectItem value="INAPPROPRIATE_CONTENT">
+              <SelectItem
+                value="all"
+                className="pup-body-md-400 h-12 px-4 cursor-pointer"
+              >
+                All categories
+              </SelectItem>
+              <SelectItem
+                value="SPAM"
+                className="pup-body-md-400 h-12 px-4 cursor-pointer"
+              >
+                Spam
+              </SelectItem>
+              <SelectItem
+                value="HARASSMENT"
+                className="pup-body-md-400 h-12 px-4 cursor-pointer"
+              >
+                Harassment
+              </SelectItem>
+              <SelectItem
+                value="INAPPROPRIATE_CONTENT"
+                className="pup-body-md-400 h-12 px-4 cursor-pointer"
+              >
                 Inappropriate content
               </SelectItem>
-              <SelectItem value="FAKE_PROFILE">Fake profile</SelectItem>
-              <SelectItem value="OTHER">Other</SelectItem>
+              <SelectItem
+                value="FAKE_PROFILE"
+                className="pup-body-md-400 h-12 px-4 cursor-pointer"
+              >
+                Fake profile
+              </SelectItem>
+              <SelectItem
+                value="OTHER"
+                className="pup-body-md-400 h-12 px-4 cursor-pointer"
+              >
+                Other
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -154,7 +199,7 @@ export default function RouteComponent() {
                 <TableRow key={i}>
                   {Array.from({ length: 6 }).map((_, j) => (
                     <TableCell key={j}>
-                      <div className="h-4 w-24 animate-pulse rounded bg-neutral-100" />
+                      <div className="h-8 w-24 animate-pulse rounded bg-neutral-100" />
                     </TableCell>
                   ))}
                 </TableRow>
@@ -174,7 +219,7 @@ export default function RouteComponent() {
               data?.reports.map((report) => (
                 <TableRow
                   key={report.id}
-                  className="cursor-pointer hover:bg-neutral-50"
+                  className="cursor-pointer hover:bg-neutral-50 py-4"
                   onClick={() =>
                     navigate({
                       to: "/reports/$reportId",
@@ -189,7 +234,7 @@ export default function RouteComponent() {
                         src={report.reportedUser.profilePicture}
                       />
                       <div>
-                        <p className="pup-body-sm-500 text-neutral-black">
+                        <p className="pup-body-md-500 text-neutral-dark-grey">
                           {report.reportedUser.name}
                         </p>
                         {report.reportedUser.suspendedTill &&
@@ -206,13 +251,13 @@ export default function RouteComponent() {
                         alt={report.reporter.name}
                         src={report.reporter.profilePicture}
                       />
-                      <span className="pup-body-sm-400 text-neutral-dark-grey">
+                      <span className="pup-body-md-500 text-neutral-dark-grey">
                         {report.reporter.name}
                       </span>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-xs font-medium text-neutral-600">
+                    <span className="rounded-full bg-neutral-100 px-4 py-1 pup-body-lg-500 text-neutral-dark-grey">
                       {categoryLabels[report.category]}
                     </span>
                   </TableCell>
@@ -220,7 +265,7 @@ export default function RouteComponent() {
                     <Badge
                       variant="outline"
                       className={cn(
-                        "text-md",
+                        "pup-body-lg-500 h-8 px-4",
                         statusConfig[report.status].className,
                       )}
                     >

@@ -64,6 +64,7 @@ export function useUpdateStatus(reportId: string) {
       axiosInstance.patch(`/admin/reports/${reportId}/status`, { status }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin-reports"] });
+      qc.invalidateQueries({ queryKey: ["report", reportId] });
       toast.success("Status updated");
     },
     onError: () => toast.error("Failed to update status"),
@@ -80,7 +81,7 @@ export function useTakeAction(reportId: string) {
     }) => axiosInstance.post(`/admin/reports/${reportId}/actions`, data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["admin-reports"] });
-      qc.invalidateQueries({ queryKey: ["admin-report", reportId] });
+      qc.invalidateQueries({ queryKey: ["report", reportId] });
       toast.success("Action taken");
     },
     onError: (e: any) =>
