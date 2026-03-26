@@ -26,7 +26,12 @@ export interface Report {
   description?: string;
   createdAt: string;
   resolvedAt?: string;
-  reporter: { id: string; name: string; profilePicture?: string };
+  reporter: {
+    id: string;
+    name: string;
+    profilePicture?: string;
+    suspendedTill?: string;
+  };
   reportedUser: {
     id: string;
     name: string;

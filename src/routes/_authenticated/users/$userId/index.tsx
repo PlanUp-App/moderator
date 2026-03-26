@@ -175,78 +175,80 @@ function RouteComponent() {
             ) : (
               <div className="flex flex-col gap-4">
                 {user.reportsReceived.map((report) => (
-                  <div
-                    key={report.id}
-                    className="rounded-xl border border-neutral-100 p-4 flex flex-col gap-3"
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        <ProfileAvatar
-                          src={report.reporter.profilePicture}
-                          alt={report.reporter.name}
-                          size="sm"
-                        />
-                        <div>
-                          <p className="text-sm font-medium text-neutral-black">
-                            {report.reporter.name}
-                          </p>
-                          <p className="text-xs text-neutral-400">
-                            {fmt(report.createdAt)}
-                          </p>
-                        </div>
-                      </div>
-                      <ReportStatusBadge reportStatus={report.status} />
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-xs text-neutral-600">
-                        {categoryLabels[report.category]}
-                      </span>
-                    </div>
-
-                    {report.description && (
-                      <p className="text-xs text-neutral-500 leading-relaxed">
-                        {report.description}
-                      </p>
-                    )}
-
-                    {/* Actions taken on this report */}
-                    {report.actions.length > 0 && (
-                      <div className="border-t border-neutral-50 pt-3 flex flex-col gap-2">
-                        <p className="text-xs font-medium text-neutral-400 uppercase tracking-wide">
-                          Actions taken
-                        </p>
-                        {report.actions.map((action) => (
-                          <div
-                            key={action.id}
-                            className="flex items-start gap-2"
-                          >
-                            <span
-                              className={cn(
-                                "text-xs font-medium rounded-full border px-2.5 py-1 shrink-0",
-                                actionConfig[action.actionType].className,
-                              )}
-                            >
-                              {actionConfig[action.actionType].label}
-                            </span>
-                            <div className="flex flex-col gap-0.5">
-                              {action.note && (
-                                <p className="text-xs text-neutral-500">
-                                  {action.note}
-                                </p>
-                              )}
-                              <p className="text-xs text-neutral-300">
-                                {action.moderator?.name ?? "System"} ·{" "}
-                                {fmt(action.createdAt)}
-                                {action.expiresAt &&
-                                  ` · until ${fmt(action.expiresAt)}`}
-                              </p>
-                            </div>
+                  <Link to={`/reports/${report.id}`}>
+                    <div
+                      key={report.id}
+                      className="rounded-xl border border-neutral-100 p-4 flex flex-col gap-3"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <ProfileAvatar
+                            src={report.reporter.profilePicture}
+                            alt={report.reporter.name}
+                            size="sm"
+                          />
+                          <div>
+                            <p className="text-sm font-medium text-neutral-black">
+                              {report.reporter.name}
+                            </p>
+                            <p className="text-xs text-neutral-400">
+                              {fmt(report.createdAt)}
+                            </p>
                           </div>
-                        ))}
+                        </div>
+                        <ReportStatusBadge reportStatus={report.status} />
                       </div>
-                    )}
-                  </div>
+
+                      <div className="flex items-center gap-2">
+                        <span className="rounded-full bg-neutral-100 px-2.5 py-1 text-xs text-neutral-600">
+                          {categoryLabels[report.category]}
+                        </span>
+                      </div>
+
+                      {report.description && (
+                        <p className="text-xs text-neutral-500 leading-relaxed">
+                          {report.description}
+                        </p>
+                      )}
+
+                      {/* Actions taken on this report */}
+                      {report.actions.length > 0 && (
+                        <div className="border-t border-neutral-50 pt-3 flex flex-col gap-2">
+                          <p className="text-xs font-medium text-neutral-400 uppercase tracking-wide">
+                            Actions taken
+                          </p>
+                          {report.actions.map((action) => (
+                            <div
+                              key={action.id}
+                              className="flex items-start gap-2"
+                            >
+                              <span
+                                className={cn(
+                                  "text-xs font-medium rounded-full border px-2.5 py-1 shrink-0",
+                                  actionConfig[action.actionType].className,
+                                )}
+                              >
+                                {actionConfig[action.actionType].label}
+                              </span>
+                              <div className="flex flex-col gap-0.5">
+                                {action.note && (
+                                  <p className="text-xs text-neutral-500">
+                                    {action.note}
+                                  </p>
+                                )}
+                                <p className="text-xs text-neutral-300">
+                                  {action.moderator?.name ?? "System"} ·{" "}
+                                  {fmt(action.createdAt)}
+                                  {action.expiresAt &&
+                                    ` · until ${fmt(action.expiresAt)}`}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </Link>
                 ))}
               </div>
             )}
@@ -262,27 +264,29 @@ function RouteComponent() {
               ) : (
                 <div className="flex flex-col gap-3">
                   {user.reportsFiled.map((report) => (
-                    <div
-                      key={report.id}
-                      className="flex items-center justify-between gap-3 rounded-xl border border-neutral-100 p-3"
-                    >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <ProfileAvatar
-                          src={report.reportedUser.profilePicture}
-                          alt={report.reportedUser.name}
-                          size="sm"
-                        />
-                        <div className="min-w-0">
-                          <p className="text-sm font-medium text-neutral-black truncate">
-                            {report.reportedUser.name}
-                          </p>
-                          <p className="text-xs text-neutral-400">
-                            {categoryLabels[report.category]}
-                          </p>
+                    <Link to={`/reports/${report.id}`}>
+                      <div
+                        key={report.id}
+                        className="flex items-center justify-between gap-3 rounded-xl border border-neutral-100 p-3"
+                      >
+                        <div className="flex items-center gap-2 min-w-0">
+                          <ProfileAvatar
+                            src={report.reportedUser.profilePicture}
+                            alt={report.reportedUser.name}
+                            size="sm"
+                          />
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium text-neutral-black truncate">
+                              {report.reportedUser.name}
+                            </p>
+                            <p className="text-xs text-neutral-400">
+                              {categoryLabels[report.category]}
+                            </p>
+                          </div>
                         </div>
+                        <ReportStatusBadge reportStatus={report.status} />
                       </div>
-                      <ReportStatusBadge reportStatus={report.status} />
-                    </div>
+                    </Link>
                   ))}
                 </div>
               )}

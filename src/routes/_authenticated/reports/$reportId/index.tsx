@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
 import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
@@ -15,7 +15,6 @@ import { ProfileAvatar } from "@/components/PreviewImage";
 import { PrimaryButton } from "@/components/Button/primary-filled";
 import { OutlineButton } from "@/components/Button/outline";
 import { DatePicker } from "@/components/DatePicker";
-import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -23,33 +22,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
 import { MdChevronLeft } from "react-icons/md";
 import SectionCard from "@/components/SectionCard";
-import ReportStatusBadge from "@/components/Badge";
+import ReportStatusBadge, { UserStatusBadge } from "@/components/Badge";
 
 export const Route = createFileRoute("/_authenticated/reports/$reportId/")({
   component: ReportDetailPage,
 });
-
-const statusConfig = {
-  PENDING: {
-    label: "Pending",
-    className: "bg-amber-50 text-amber-700 border-amber-200",
-  },
-  UNDER_REVIEW: {
-    label: "Under review",
-    className: "bg-blue-50 text-blue-700 border-blue-200",
-  },
-  RESOLVED: {
-    label: "Resolved",
-    className: "bg-green-50 text-green-700 border-green-200",
-  },
-  DISMISSED: {
-    label: "Dismissed",
-    className: "bg-neutral-100 text-neutral-500 border-neutral-200",
-  },
-};
 
 const categoryLabels = {
   SPAM: "Spam",
@@ -66,7 +45,6 @@ const actionLabels = {
 };
 
 function ReportDetailPage() {
-  const navigate = useNavigate();
   const { reportId } = useParams({ from: Route.id });
 
   const { data: report, isLoading } = useGetReportById(reportId);
@@ -80,10 +58,6 @@ function ReportDetailPage() {
 
   if (isLoading) return <div className="p-8">Loading report...</div>;
   if (!report) return <div className="p-8">Report not found</div>;
-
-  const isBanned =
-    report.reportedUser.suspendedTill &&
-    new Date(report.reportedUser.suspendedTill) > new Date();
 
   const handleAction = () => {
     actionMutation.mutate({
@@ -137,14 +111,14 @@ function ReportDetailPage() {
                 alt={report.reportedUser.name}
                 src={report.reportedUser.profilePicture}
               />
-              <div>
-                <p className="pup-body-sm-500 text-neutral-black">
-                  {report.reportedUser.name}
-                </p>
-                {isBanned && (
-                  <p className="pup-body-sm-400 text-red-500">Suspended</p>
-                )}
-              </div>
+              <p className="pup-body-sm-500 text-neutral-black">
+                {report.reportedUser.name}
+              </p>
+              <UserStatusBadge
+                user={{
+                  suspendedTill: report.reportedUser.suspendedTill || null,
+                }}
+              />
             </div>
           </Link>
         </SectionCard>
@@ -158,6 +132,11 @@ function ReportDetailPage() {
               <span className="pup-body-sm-500 text-neutral-black truncate">
                 {report.reporter.name}
               </span>
+              <UserStatusBadge
+                user={{
+                  suspendedTill: report.reporter.suspendedTill || null,
+                }}
+              />
             </div>
           </Link>
         </SectionCard>

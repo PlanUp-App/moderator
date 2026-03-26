@@ -33,7 +33,7 @@ export default function ReportStatusBadge({
     <Badge
       variant="outline"
       className={cn(
-        "pup-body-lg-500 h-8 px-4",
+        "pup-body-md-500 h-8 px-4",
         statusConfig[reportStatus].className,
       )}
     >
