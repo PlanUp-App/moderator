@@ -14,43 +14,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 import { MdOutlineSearch } from "react-icons/md";
 import { ProfileAvatar } from "@/components/PreviewImage";
 import { format } from "date-fns";
 import { useGetAllClients, type UserStatus } from "./-queries";
 import { SearchInput } from "@/components/CustomInput/search-input";
+import { UserStatusBadge } from "@/components/Badge";
 
 export const Route = createFileRoute("/_authenticated/users/")({
   component: RouteComponent,
 });
-
-const statusConfig = {
-  ACTIVE: {
-    label: "Active",
-    className: "bg-green-50 text-green-700 border-green-200",
-  },
-  SUSPENDED: {
-    label: "Suspended",
-    className: "bg-red-50 text-red-700 border-red-200",
-  },
-  UNVERIFIED: {
-    label: "Unverified",
-    className: "bg-amber-50 text-amber-700 border-amber-200",
-  },
-};
-
-function getStatus(user: any): keyof typeof statusConfig {
-  if (user.suspendedTill && new Date(user.suspendedTill) > new Date()) {
-    return "SUSPENDED";
-  }
-  if (!user.verifiedAt) {
-    return "UNVERIFIED";
-  }
-  return "ACTIVE";
-}
 
 export default function RouteComponent() {
   const navigate = useNavigate();
@@ -176,14 +150,13 @@ export default function RouteComponent() {
               </TableRow>
             ) : (
               data?.users.map((user) => {
-                const status = getStatus(user);
                 return (
                   <TableRow
                     key={user.id}
                     className="cursor-pointer hover:bg-neutral-50 py-4"
                     onClick={() =>
                       navigate({
-                        to: "/admin/users/$userId",
+                        to: "/users/$userId",
                         params: { userId: user.id },
                       })
                     }
@@ -205,15 +178,10 @@ export default function RouteComponent() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge
-                        variant="outline"
-                        className={cn(
-                          "pup-body-lg-500 h-8 px-4",
-                          statusConfig[status].className,
-                        )}
-                      >
-                        {statusConfig[status].label}
-                      </Badge>
+                      <UserStatusBadge
+                        user={{ suspendedTill: user.suspendedTill }}
+                        className="w-fit"
+                      />
                     </TableCell>
                     <TableCell className="pup-body-sm-500 font-medium text-neutral-black">
                       {user._count.planMemberships}
