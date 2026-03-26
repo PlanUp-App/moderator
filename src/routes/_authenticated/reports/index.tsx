@@ -14,41 +14,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 import { MdOutlineSearch } from "react-icons/md";
-import {
-  type ReportStatus,
-  type ReportCategory,
-  useGetReports,
-} from "./-queries";
+import { type ReportCategory, useGetReports } from "./-queries";
 import { ProfileAvatar } from "@/components/PreviewImage";
 import { formatDistanceToNow } from "date-fns";
+import ReportStatusBadge from "@/components/Badge";
 
 export const Route = createFileRoute("/_authenticated/reports/")({
   component: RouteComponent,
 });
-
-const statusConfig: Record<ReportStatus, { label: string; className: string }> =
-  {
-    PENDING: {
-      label: "Pending",
-      className: "bg-amber-50 text-amber-700 border-amber-200",
-    },
-    UNDER_REVIEW: {
-      label: "Under review",
-      className: "bg-blue-50 text-blue-700 border-blue-200",
-    },
-    RESOLVED: {
-      label: "Resolved",
-      className: "bg-green-50 text-green-700 border-green-200",
-    },
-    DISMISSED: {
-      label: "Dismissed",
-      className: "bg-neutral-100 text-neutral-500 border-neutral-200",
-    },
-  };
 
 const categoryLabels: Record<ReportCategory, string> = {
   SPAM: "Spam",
@@ -58,7 +33,7 @@ const categoryLabels: Record<ReportCategory, string> = {
   OTHER: "Other",
 };
 
-export default function RouteComponent() {
+function RouteComponent() {
   const navigate = useNavigate();
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
@@ -262,15 +237,7 @@ export default function RouteComponent() {
                     </span>
                   </TableCell>
                   <TableCell>
-                    <Badge
-                      variant="outline"
-                      className={cn(
-                        "pup-body-lg-500 h-8 px-4",
-                        statusConfig[report.status].className,
-                      )}
-                    >
-                      {statusConfig[report.status].label}
-                    </Badge>
+                    <ReportStatusBadge reportStatus={report.status} />
                   </TableCell>
                   <TableCell className="pup-body-sm-400 text-neutral-dark-grey">
                     {formatDistanceToNow(new Date(report.createdAt), {

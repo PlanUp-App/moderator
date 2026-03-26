@@ -13,7 +13,11 @@ export type ReportCategory =
   | "INAPPROPRIATE_CONTENT"
   | "FAKE_PROFILE"
   | "OTHER";
-export type ModerationActionType = "WARNING" | "TEMP_BAN" | "PERMANENT_BAN";
+export type ModerationActionType =
+  | "WARNING"
+  | "TEMP_BAN"
+  | "PERMANENT_BAN"
+  | "CONTENT_REMOVED";
 
 export interface Report {
   id: string;

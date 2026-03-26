@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
 import { useState } from "react";
 import { formatDistanceToNow } from "date-fns";
@@ -24,6 +24,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { MdChevronLeft } from "react-icons/md";
+import SectionCard from "@/components/SectionCard";
+import ReportStatusBadge from "@/components/Badge";
 
 export const Route = createFileRoute("/_authenticated/reports/$reportId/")({
   component: ReportDetailPage,
@@ -95,17 +98,19 @@ function ReportDetailPage() {
   };
 
   return (
-    <div className="p-8 flex flex-col gap-6">
+    <div className="p-8 flex flex-col gap-6 max-w-5xl mx-auto">
       {/* Header */}
+      <Link
+        to="/users"
+        className="flex items-center gap-1.5 text-sm text-neutral-400 hover:text-neutral-black transition-colors w-fit"
+      >
+        <MdChevronLeft size={16} />
+        Back to users
+      </Link>
       <div className="flex items-center gap-1">
-        <OutlineButton
-          onClick={() => navigate({ to: "/reports" })}
-          className="text-neutral-dark-grey"
-          title="←"
-        />
         <div>
           <h1 className="pup-heading-three text-neutral-black">
-            Report Details
+            Report #{reportId}
           </h1>
           <p className="pup-body-sm-400 text-neutral-dark-grey">
             {formatDistanceToNow(new Date(report.createdAt), {
@@ -115,69 +120,56 @@ function ReportDetailPage() {
         </div>
       </div>
 
-      {/* Users */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-xl border border-neutral-100 bg-neutral-50 p-3">
-          <p className="pup-body-sm-400 text-neutral-dark-grey mb-2">
-            Reported user
-          </p>
-          <div className="flex items-center gap-2">
-            <ProfileAvatar
-              alt={report.reportedUser.name}
-              src={report.reportedUser.profilePicture}
-            />
-            <div>
-              <p className="pup-body-sm-500 text-neutral-black">
-                {report.reportedUser.name}
-              </p>
-              {isBanned && (
-                <p className="pup-body-sm-400 text-red-500">Suspended</p>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="rounded-xl border border-neutral-100 bg-neutral-50 p-3">
-          <p className="pup-body-sm-400 text-neutral-dark-grey mb-2">
-            Reported by
-          </p>
-          <div className="flex items-center gap-2">
-            <ProfileAvatar
-              alt={report.reporter.name}
-              src={report.reporter.profilePicture}
-            />
-            <span className="pup-body-sm-500 text-neutral-black truncate">
-              {report.reporter.name}
-            </span>
-          </div>
-        </div>
-      </div>
-
       {/* Category + status */}
       <div className="flex items-center gap-2">
         <span className="rounded-full bg-neutral-100 px-4 py-1 pup-body-lg-500 text-neutral-dark-grey">
           {categoryLabels[report.category]}
         </span>
-        <Badge
-          variant="outline"
-          className={cn(
-            "pup-body-lg-500 h-8 px-4",
-            statusConfig[report.status].className,
-          )}
-        >
-          {statusConfig[report.status].label}
-        </Badge>
+        <ReportStatusBadge reportStatus={report.status} />
+      </div>
+
+      {/* Users */}
+      <div className="grid grid-cols-2 gap-3">
+        <SectionCard title="Reported User">
+          <Link to={`/users/${report.reportedUser.id}`}>
+            <div className="flex items-center gap-2">
+              <ProfileAvatar
+                alt={report.reportedUser.name}
+                src={report.reportedUser.profilePicture}
+              />
+              <div>
+                <p className="pup-body-sm-500 text-neutral-black">
+                  {report.reportedUser.name}
+                </p>
+                {isBanned && (
+                  <p className="pup-body-sm-400 text-red-500">Suspended</p>
+                )}
+              </div>
+            </div>
+          </Link>
+        </SectionCard>
+        <SectionCard title="Reported By">
+          <Link to={`/users/${report.reporter.id}`}>
+            <div className="flex items-center gap-2">
+              <ProfileAvatar
+                alt={report.reporter.name}
+                src={report.reporter.profilePicture}
+              />
+              <span className="pup-body-sm-500 text-neutral-black truncate">
+                {report.reporter.name}
+              </span>
+            </div>
+          </Link>
+        </SectionCard>
       </div>
 
       {/* Description */}
       {report.description && (
-        <div className="rounded-xl border border-neutral-100 bg-neutral-50 p-3 w-[50%]">
-          <p className="pup-body-sm-400 text-neutral-dark-grey mb-2">
-            Description
-          </p>
+        <SectionCard title="Description" className="w-[50%]">
           <p className="pup-body-md-400 text-neutral-black">
             {report.description}
           </p>
-        </div>
+        </SectionCard>
       )}
 
       {/* Past actions */}
