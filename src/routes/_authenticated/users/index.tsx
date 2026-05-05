@@ -179,7 +179,10 @@ export default function RouteComponent() {
                     </TableCell>
                     <TableCell>
                       <UserStatusBadge
-                        user={{ suspendedTill: user.suspendedTill }}
+                        user={{
+                          suspendedTill: user.suspendedTill,
+                          verifiedAt: user.verifiedAt,
+                        }}
                         className="w-fit"
                       />
                     </TableCell>

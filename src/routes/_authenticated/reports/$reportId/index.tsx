@@ -24,7 +24,10 @@ import {
 } from "@/components/ui/select";
 import { MdChevronLeft } from "react-icons/md";
 import SectionCard from "@/components/SectionCard";
-import ReportStatusBadge, { UserStatusBadge } from "@/components/Badge";
+import ReportStatusBadge, {
+  UserStatusBadge,
+  ModerationActionBadge,
+} from "@/components/Badge";
 
 export const Route = createFileRoute("/_authenticated/reports/$reportId/")({
   component: ReportDetailPage,
@@ -157,6 +160,7 @@ function ReportDetailPage() {
           <p className="pup-body-sm-400 text-neutral-dark-grey mb-3">
             Moderator Action
           </p>
+
           <div className="flex flex-col gap-2">
             {report.actions.map((action) => (
               <div
@@ -164,11 +168,11 @@ function ReportDetailPage() {
                 className="flex justify-between rounded-xl border border-neutral-100 bg-neutral-50 px-3 py-2"
               >
                 <div>
-                  <p className="pup-body-sm-500 capitalize">
-                    {action.actionType.replace("_", " ").toLowerCase()}
-                  </p>
+                  <div className="mb-2">
+                    <ModerationActionBadge type={action.actionType} />
+                  </div>
                   {action.note && (
-                    <p className="mt-4 pup-body-sm-400 text-neutral-black">
+                    <p className="pup-body-sm-400 text-neutral-black">
                       {action.note}
                     </p>
                   )}

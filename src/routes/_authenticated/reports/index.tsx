@@ -19,7 +19,7 @@ import { MdOutlineSearch } from "react-icons/md";
 import { type ReportCategory, useGetReports } from "./-queries";
 import { ProfileAvatar } from "@/components/PreviewImage";
 import { formatDistanceToNow } from "date-fns";
-import ReportStatusBadge from "@/components/Badge";
+import ReportStatusBadge, { UserStatusBadge } from "@/components/Badge";
 
 export const Route = createFileRoute("/_authenticated/reports/")({
   component: RouteComponent,
@@ -195,28 +195,24 @@ function RouteComponent() {
                 <TableRow
                   key={report.id}
                   className="cursor-pointer hover:bg-neutral-50 py-4"
-                  onClick={() =>
-                    navigate({
-                      to: "/reports/$reportId",
-                      params: { reportId: report.id },
-                    })
-                  }
+                  onClick={() => navigate({
+                    to: "/reports/$reportId",
+                    params: { reportId: report.id },
+                  })}
                 >
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <ProfileAvatar
                         alt={report.reportedUser.name}
-                        src={report.reportedUser.profilePicture}
-                      />
-                      <div>
+                        src={report.reportedUser.profilePicture} />
+                      <div className="flex items-center gap-2">
                         <p className="pup-body-md-500 text-neutral-dark-grey">
                           {report.reportedUser.name}
                         </p>
-                        {report.reportedUser.suspendedTill &&
-                          new Date(report.reportedUser.suspendedTill) >
-                            new Date() && (
-                            <p className="text-xs text-red-500">Suspended</p>
-                          )}
+                        <UserStatusBadge
+                          user={{
+                            suspendedTill: report.reportedUser.suspendedTill || null,
+                          }} />
                       </div>
                     </div>
                   </TableCell>
@@ -224,11 +220,16 @@ function RouteComponent() {
                     <div className="flex items-center gap-2">
                       <ProfileAvatar
                         alt={report.reporter.name}
-                        src={report.reporter.profilePicture}
-                      />
-                      <span className="pup-body-md-500 text-neutral-dark-grey">
-                        {report.reporter.name}
-                      </span>
+                        src={report.reporter.profilePicture} />
+                      <div className="flex items-center gap-2">
+                        <p className="pup-body-md-500 text-neutral-dark-grey">
+                          {report.reporter.name}
+                        </p>
+                        <UserStatusBadge
+                          user={{
+                            suspendedTill: report.reporter.suspendedTill || null,
+                          }} />
+                      </div>
                     </div>
                   </TableCell>
                   <TableCell>

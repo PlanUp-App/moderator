@@ -1,11 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useParams } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-import { cn } from "@/lib/utils";
 import { useGetUserById } from "../-queries";
 import { ProfileAvatar } from "@/components/PreviewImage";
 import type {
-  ModerationActionType,
   ReportCategory,
 } from "../../reports/-queries";
 import {
@@ -18,7 +16,7 @@ import {
   MdVerified,
 } from "react-icons/md";
 import SectionCard from "@/components/SectionCard";
-import ReportStatusBadge, { fmt, UserStatusBadge } from "@/components/Badge";
+import ReportStatusBadge, { fmt, ModerationActionBadge, UserStatusBadge } from "@/components/Badge";
 
 export const Route = createFileRoute("/_authenticated/users/$userId/")({
   component: RouteComponent,
@@ -33,27 +31,6 @@ function StatCard({ label, value }: { label: string; value: number }) {
   );
 }
 
-const actionConfig: Record<
-  ModerationActionType,
-  { label: string; className: string }
-> = {
-  WARNING: {
-    label: "Warning",
-    className: "bg-amber-50 text-amber-700 border-amber-200",
-  },
-  TEMP_BAN: {
-    label: "Temp ban",
-    className: "bg-orange-50 text-orange-700 border-orange-200",
-  },
-  PERMANENT_BAN: {
-    label: "Permanent ban",
-    className: "bg-red-50 text-red-700 border-red-200",
-  },
-  CONTENT_REMOVED: {
-    label: "Content removed",
-    className: "bg-purple-50 text-purple-700 border-purple-200",
-  },
-};
 
 const categoryLabels: Record<ReportCategory, string> = {
   SPAM: "Spam",
@@ -98,10 +75,10 @@ function RouteComponent() {
             style={
               user.coverImage
                 ? {
-                    backgroundImage: `url(${user.coverImage})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                  }
+                  backgroundImage: `url(${user.coverImage})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }
                 : {}
             }
           />
@@ -122,6 +99,7 @@ function RouteComponent() {
               <UserStatusBadge
                 user={{
                   suspendedTill: user.suspendedTill,
+                  verifiedAt: user.verifiedAt,
                 }}
               />
             </div>
@@ -222,14 +200,7 @@ function RouteComponent() {
                               key={action.id}
                               className="flex items-start gap-2"
                             >
-                              <span
-                                className={cn(
-                                  "text-xs font-medium rounded-full border px-2.5 py-1 shrink-0",
-                                  actionConfig[action.actionType].className,
-                                )}
-                              >
-                                {actionConfig[action.actionType].label}
-                              </span>
+                              <ModerationActionBadge type={action.actionType} />
                               <div className="flex flex-col gap-0.5">
                                 {action.note && (
                                   <p className="text-xs text-neutral-500">
