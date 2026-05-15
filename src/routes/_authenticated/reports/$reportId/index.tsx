@@ -45,6 +45,7 @@ const actionLabels = {
   WARNING: "Warning",
   TEMP_BAN: "Temporary ban",
   PERMANENT_BAN: "Permanent ban",
+  REVERSE_BAN: "Unsuspend user",
 };
 
 function ReportDetailPage() {
@@ -61,6 +62,10 @@ function ReportDetailPage() {
 
   if (isLoading) return <div className="p-8">Loading report...</div>;
   if (!report) return <div className="p-8">Report not found</div>;
+
+  const isSuspended =
+    report.reportedUser.suspendedTill &&
+    new Date(report.reportedUser.suspendedTill) > new Date();
 
   const handleAction = () => {
     actionMutation.mutate({
@@ -235,6 +240,14 @@ function ReportDetailPage() {
                     >
                       {actionLabels.PERMANENT_BAN}
                     </SelectItem>
+                    {isSuspended && (
+                      <SelectItem
+                        value="REVERSE_BAN"
+                        className="pup-body-md-400 h-12 px-4 cursor-pointer"
+                      >
+                        {actionLabels.REVERSE_BAN}
+                      </SelectItem>
+                    )}
                   </SelectContent>
                 </Select>
 

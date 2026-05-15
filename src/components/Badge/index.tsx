@@ -65,6 +65,10 @@ const actionConfig: Record<
     label: "Removed",
     className: "bg-neutral-100 text-neutral-500 border-neutral-200",
   },
+  REVERSE_BAN: {
+    label: "Unsuspended",
+    className: "bg-green-50 text-green-700 border-green-200",
+  },
 };
 
 export function ModerationActionBadge({

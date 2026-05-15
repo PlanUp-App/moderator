@@ -26,7 +26,7 @@ export const Route = createFileRoute("/_authenticated/users/")({
   component: RouteComponent,
 });
 
-export default function RouteComponent() {
+function RouteComponent() {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<UserStatus | "all">("all");

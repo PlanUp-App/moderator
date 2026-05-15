@@ -11,7 +11,10 @@ import {
   MdOutlineDashboard,
   MdOutlinePeopleAlt,
   MdOutlineFlag,
+  MdOutlineManageAccounts,
+  MdOutlineListAlt,
 } from "react-icons/md";
+import { useAuth } from "@/auth/useAuth";
 
 function NavItem({
   to,
@@ -42,6 +45,9 @@ function NavItem({
 }
 
 export function AdminSidebar() {
+  const { user } = useAuth();
+  const isAdmin = user?.role === "ADMIN";
+
   return (
     <Sidebar collapsible="offcanvas">
       <SidebarHeader className="bg-off-white">
@@ -60,6 +66,14 @@ export function AdminSidebar() {
           />
           <NavItem to="/reports" icon={MdOutlineFlag} label="Reports" />
           <NavItem to="/users" icon={MdOutlinePeopleAlt} label="Users" />
+          <NavItem to="/plans" icon={MdOutlineListAlt} label="Plans" />
+          {isAdmin && (
+            <NavItem
+              to="/moderators"
+              icon={MdOutlineManageAccounts}
+              label="Moderators"
+            />
+          )}
         </SidebarMenu>
       </SidebarContent>
     </Sidebar>

@@ -17,7 +17,8 @@ export type ModerationActionType =
   | "WARNING"
   | "TEMP_BAN"
   | "PERMANENT_BAN"
-  | "CONTENT_REMOVED";
+  | "CONTENT_REMOVED"
+  | "REVERSE_BAN";
 
 export interface Report {
   id: string;

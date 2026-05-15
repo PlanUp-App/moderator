@@ -14,9 +14,12 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as LoginIndexRouteImport } from './routes/login/index'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedReportsIndexRouteImport } from './routes/_authenticated/reports/index'
+import { Route as AuthenticatedPlansIndexRouteImport } from './routes/_authenticated/plans/index'
+import { Route as AuthenticatedModeratorsIndexRouteImport } from './routes/_authenticated/moderators/index'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
 import { Route as AuthenticatedUsersUserIdIndexRouteImport } from './routes/_authenticated/users/$userId/index'
 import { Route as AuthenticatedReportsReportIdIndexRouteImport } from './routes/_authenticated/reports/$reportId/index'
+import { Route as AuthenticatedPlansPlanIdIndexRouteImport } from './routes/_authenticated/plans/$planId/index'
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
@@ -43,6 +46,17 @@ const AuthenticatedReportsIndexRoute =
     path: '/reports/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedPlansIndexRoute = AuthenticatedPlansIndexRouteImport.update({
+  id: '/plans/',
+  path: '/plans/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedModeratorsIndexRoute =
+  AuthenticatedModeratorsIndexRouteImport.update({
+    id: '/moderators/',
+    path: '/moderators/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedDashboardIndexRoute =
   AuthenticatedDashboardIndexRouteImport.update({
     id: '/dashboard/',
@@ -61,13 +75,22 @@ const AuthenticatedReportsReportIdIndexRoute =
     path: '/reports/$reportId/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedPlansPlanIdIndexRoute =
+  AuthenticatedPlansPlanIdIndexRouteImport.update({
+    id: '/plans/$planId/',
+    path: '/plans/$planId/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login/': typeof LoginIndexRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/moderators/': typeof AuthenticatedModeratorsIndexRoute
+  '/plans/': typeof AuthenticatedPlansIndexRoute
   '/reports/': typeof AuthenticatedReportsIndexRoute
   '/users/': typeof AuthenticatedUsersIndexRoute
+  '/plans/$planId/': typeof AuthenticatedPlansPlanIdIndexRoute
   '/reports/$reportId/': typeof AuthenticatedReportsReportIdIndexRoute
   '/users/$userId/': typeof AuthenticatedUsersUserIdIndexRoute
 }
@@ -75,8 +98,11 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
+  '/moderators': typeof AuthenticatedModeratorsIndexRoute
+  '/plans': typeof AuthenticatedPlansIndexRoute
   '/reports': typeof AuthenticatedReportsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/plans/$planId': typeof AuthenticatedPlansPlanIdIndexRoute
   '/reports/$reportId': typeof AuthenticatedReportsReportIdIndexRoute
   '/users/$userId': typeof AuthenticatedUsersUserIdIndexRoute
 }
@@ -86,8 +112,11 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login/': typeof LoginIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
+  '/_authenticated/moderators/': typeof AuthenticatedModeratorsIndexRoute
+  '/_authenticated/plans/': typeof AuthenticatedPlansIndexRoute
   '/_authenticated/reports/': typeof AuthenticatedReportsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/plans/$planId/': typeof AuthenticatedPlansPlanIdIndexRoute
   '/_authenticated/reports/$reportId/': typeof AuthenticatedReportsReportIdIndexRoute
   '/_authenticated/users/$userId/': typeof AuthenticatedUsersUserIdIndexRoute
 }
@@ -97,8 +126,11 @@ export interface FileRouteTypes {
     | '/'
     | '/login/'
     | '/dashboard/'
+    | '/moderators/'
+    | '/plans/'
     | '/reports/'
     | '/users/'
+    | '/plans/$planId/'
     | '/reports/$reportId/'
     | '/users/$userId/'
   fileRoutesByTo: FileRoutesByTo
@@ -106,8 +138,11 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard'
+    | '/moderators'
+    | '/plans'
     | '/reports'
     | '/users'
+    | '/plans/$planId'
     | '/reports/$reportId'
     | '/users/$userId'
   id:
@@ -116,8 +151,11 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/login/'
     | '/_authenticated/dashboard/'
+    | '/_authenticated/moderators/'
+    | '/_authenticated/plans/'
     | '/_authenticated/reports/'
     | '/_authenticated/users/'
+    | '/_authenticated/plans/$planId/'
     | '/_authenticated/reports/$reportId/'
     | '/_authenticated/users/$userId/'
   fileRoutesById: FileRoutesById
@@ -165,6 +203,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedReportsIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/plans/': {
+      id: '/_authenticated/plans/'
+      path: '/plans'
+      fullPath: '/plans/'
+      preLoaderRoute: typeof AuthenticatedPlansIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/moderators/': {
+      id: '/_authenticated/moderators/'
+      path: '/moderators'
+      fullPath: '/moderators/'
+      preLoaderRoute: typeof AuthenticatedModeratorsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/dashboard/': {
       id: '/_authenticated/dashboard/'
       path: '/dashboard'
@@ -186,21 +238,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedReportsReportIdIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/plans/$planId/': {
+      id: '/_authenticated/plans/$planId/'
+      path: '/plans/$planId'
+      fullPath: '/plans/$planId/'
+      preLoaderRoute: typeof AuthenticatedPlansPlanIdIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
 interface AuthenticatedRouteChildren {
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
+  AuthenticatedModeratorsIndexRoute: typeof AuthenticatedModeratorsIndexRoute
+  AuthenticatedPlansIndexRoute: typeof AuthenticatedPlansIndexRoute
   AuthenticatedReportsIndexRoute: typeof AuthenticatedReportsIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedPlansPlanIdIndexRoute: typeof AuthenticatedPlansPlanIdIndexRoute
   AuthenticatedReportsReportIdIndexRoute: typeof AuthenticatedReportsReportIdIndexRoute
   AuthenticatedUsersUserIdIndexRoute: typeof AuthenticatedUsersUserIdIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
+  AuthenticatedModeratorsIndexRoute: AuthenticatedModeratorsIndexRoute,
+  AuthenticatedPlansIndexRoute: AuthenticatedPlansIndexRoute,
   AuthenticatedReportsIndexRoute: AuthenticatedReportsIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedPlansPlanIdIndexRoute: AuthenticatedPlansPlanIdIndexRoute,
   AuthenticatedReportsReportIdIndexRoute:
     AuthenticatedReportsReportIdIndexRoute,
   AuthenticatedUsersUserIdIndexRoute: AuthenticatedUsersUserIdIndexRoute,

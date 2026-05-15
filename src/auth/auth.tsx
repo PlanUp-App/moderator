@@ -42,7 +42,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const { data, isError, isSuccess, isPending } = useValidateToken({
+  const { data, isError } = useValidateToken({
     enabled: !!token && (urlToken ? true : !isLoading),
   });
 
@@ -94,12 +94,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   const logout = () => {
-    localStorage.removeItem("auth_token");
     localStorage.removeItem("user");
+    localStorage.removeItem("auth_token");
     setUser(null);
+    queryClient.invalidateQueries();
     queryClient.clear();
     router.navigate({ to: "/" });
-    queryClient.invalidateQueries();
   };
 
   const updateUser = (updates: Partial<Admin>) => {
