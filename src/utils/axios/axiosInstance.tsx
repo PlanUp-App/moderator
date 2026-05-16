@@ -2,7 +2,7 @@ import axios from "axios";
 import { router } from "../../main";
 
 const defaultOptions = {
-  baseURL: "http://localhost:7001",
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
     "Content-Type": "application/json",
   },

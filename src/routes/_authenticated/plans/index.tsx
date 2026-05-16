@@ -174,9 +174,9 @@ function RouteComponent() {
                           <p className="pup-body-md-500 text-neutral-black truncate">
                             {plan.name}
                           </p>
-                          <p className="text-xs text-neutral-400 pup-body-sm-400 truncate">
+                          <div className="text-xs text-neutral-400 pup-body-sm-400 truncate">
                             <RichTextParser html={plan.description} />
-                          </p>
+                          </div>
                         </div>
                       </div>
                     </TableCell>

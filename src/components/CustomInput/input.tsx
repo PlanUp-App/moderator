@@ -11,6 +11,7 @@ type Props = {
   value?: string;
   onChange?: (value: string) => void;
   error?: string;
+  autoComplete?: string;
 };
 
 export function CustomInput({
@@ -21,6 +22,7 @@ export function CustomInput({
   inputProps,
   disabled = false,
   error,
+  autoComplete,
 }: Props) {
   return (
     <div className={className}>
@@ -35,6 +37,7 @@ export function CustomInput({
         placeholder={placeholder}
         {...inputProps}
         disabled={disabled}
+        autoComplete={autoComplete}
         className="border-neutral-light-grey border pup-body-medium-400 placeholder:text-neutral-grey text-neutral-black rounded-[8px] px-3.5 py-2.5 w-full disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed disabled:opacity-60"
       />
       {(inputProps?.error || error) && (

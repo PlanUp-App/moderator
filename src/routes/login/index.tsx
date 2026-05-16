@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, redirect, useLocation } from "@tanstack/react-router";
 import { AxiosError } from "axios";
 import { useState } from "react";
 import { PrimaryButton } from "../../components/Button/primary-filled";
@@ -11,13 +11,21 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/login/")({
   validateSearch: (search) => ({
-    redirect: search.redirect as string,
+    redirect: search.redirect as string | undefined,
   }),
+
   beforeLoad: ({ context, search }) => {
+    const redirectTo = search.redirect;
+    const isLoginRedirect =
+      redirectTo === "/login" || redirectTo?.startsWith("/login?");
+
     if (context.auth.isAuthenticated) {
-      throw redirect({ to: search.redirect || "/dashboard" });
+      throw redirect({
+        href: isLoginRedirect ? "/dashboard" : redirectTo || "/dashboard",
+      });
     }
   },
+
   component: Index,
 });
 
@@ -46,8 +54,7 @@ function Index() {
       {
         onSuccess: () => {
           toast.success("Login Successful");
-          console.log(redirect);
-          router.navigate({ to: redirect });
+          router.navigate({ href: redirect });
           setIsLoading(false);
         },
         onError: (err: unknown) => {

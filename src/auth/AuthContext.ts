@@ -1,10 +1,21 @@
 import { createContext } from "react";
 import type { UseMutationResult } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
-import type { Admin, LoginCredentials, LoginResponse } from "./-queries";
+import type {
+  Admin,
+  ChangePasswordResponse,
+  ChangePasswordPayload,
+  LoginCredentials,
+  LoginResponse,
+} from "./-queries";
 
 export interface AuthState {
   user: Admin | null;
+  changePasswordMutation: UseMutationResult<
+    ChangePasswordResponse,
+    AxiosError,
+    ChangePasswordPayload
+  >;
   isAuthenticated: boolean;
   isLoading: boolean;
   loginMutation: UseMutationResult<LoginResponse, AxiosError, LoginCredentials>;

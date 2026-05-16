@@ -7,6 +7,7 @@ export interface Admin {
   name: string;
   email: string;
   role: "ADMIN" | "MODERATOR";
+  mustChangePassword?: boolean;
 }
 
 export interface LoginCredentials {
@@ -41,4 +42,13 @@ export const useValidateToken = ({ enabled }: { enabled: boolean }) => {
     },
     enabled,
   });
+};
+
+export type ChangePasswordPayload = {
+  currentPassword: string;
+  newPassword: string;
+};
+
+export type ChangePasswordResponse = {
+  message: string;
 };

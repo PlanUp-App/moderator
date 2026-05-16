@@ -164,9 +164,9 @@ function RouteComponent() {
             </div>
 
             {plan.description && (
-              <p className="text-sm text-neutral-500 max-w-2xl leading-relaxed">
+              <div className="text-sm text-neutral-500 max-w-2xl leading-relaxed">
                 <RichTextParser html={plan.description} />
-              </p>
+              </div>
             )}
 
             {plan.isFlagged && !isRemoved && (

@@ -54,8 +54,6 @@ const editSchema = z.object({
 type CreateValues = z.infer<typeof createSchema>;
 type EditValues = z.infer<typeof editSchema>;
 
-// ─── Route ───────────────────────────────────────────────────────────────────
-
 export const Route = createFileRoute("/_authenticated/moderators/")({
   beforeLoad: ({ context }) => {
     if (context.auth.user?.role !== "ADMIN") {
@@ -64,8 +62,6 @@ export const Route = createFileRoute("/_authenticated/moderators/")({
   },
   component: ModeratorsPage,
 });
-
-// ─── Modal ───────────────────────────────────────────────────────────────────
 
 interface ModeratorModalProps {
   open: boolean;
@@ -150,6 +146,7 @@ function ModeratorModal({
             <CustomInput
               label="New Password (Leave blank to keep current)"
               inputProps={editForm.getInputProps("password")}
+              type="password"
             />
             <DialogFooter>
               <PrimaryButton
@@ -161,7 +158,11 @@ function ModeratorModal({
             </DialogFooter>
           </form>
         ) : (
-          <form onSubmit={handleCreate} className="grid gap-3 mt-2">
+          <form
+            onSubmit={handleCreate}
+            className="grid gap-3 mt-2"
+            autoComplete="off"
+          >
             <CustomInput
               label="Name"
               inputProps={createForm.getInputProps("name")}
@@ -169,10 +170,13 @@ function ModeratorModal({
             <CustomInput
               label="Email"
               inputProps={createForm.getInputProps("email")}
+              autoComplete="new-email"
             />
             <CustomInput
               label="Password"
+              type="password"
               inputProps={createForm.getInputProps("password")}
+              autoComplete="new-password"
             />
             <DialogFooter>
               <PrimaryButton
@@ -188,8 +192,6 @@ function ModeratorModal({
     </Dialog>
   );
 }
-
-// ─── Page ────────────────────────────────────────────────────────────────────
 
 const PAGE_SIZE = 10;
 

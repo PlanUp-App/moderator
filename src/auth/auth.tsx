@@ -10,6 +10,8 @@ import {
   type Admin,
   type LoginCredentials,
   type LoginResponse,
+  type ChangePasswordPayload,
+  type ChangePasswordResponse,
 } from "./-queries";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -84,20 +86,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return response.data;
     },
     onSuccess: (data) => {
+      setUser(data.admin);
       localStorage.setItem("auth_token", data.token);
       localStorage.setItem("user", JSON.stringify(data.admin));
       axiosInstance.defaults.headers.common["Authorization"] =
         `Bearer ${data.token}`;
-      setUser(data.admin);
       queryClient.invalidateQueries(); // Refresh all queries
     },
   });
 
   const logout = () => {
+    setUser(null);
     localStorage.removeItem("user");
     localStorage.removeItem("auth_token");
-    setUser(null);
-    queryClient.invalidateQueries();
     queryClient.clear();
     router.navigate({ to: "/" });
   };
@@ -109,6 +110,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem("user", JSON.stringify(updatedUser));
     }
   };
+
+  const changePasswordMutation = useMutation<
+    ChangePasswordResponse,
+    AxiosError,
+    ChangePasswordPayload
+  >({
+    mutationFn: async (payload) => {
+      const response = await axiosInstance.post<ChangePasswordResponse>(
+        "/admin/auth/change-password",
+        payload,
+      );
+
+      return response.data;
+    },
+
+    onSuccess: () => {
+      updateUser({
+        mustChangePassword: false,
+      });
+    },
+  });
 
   if (isLoading) {
     return (
@@ -122,6 +144,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider
       value={{
         user,
+        changePasswordMutation,
         isAuthenticated: !!user,
         isLoading,
         loginMutation,

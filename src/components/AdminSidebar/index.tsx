@@ -15,6 +15,7 @@ import {
   MdOutlineListAlt,
 } from "react-icons/md";
 import { useAuth } from "@/auth/useAuth";
+import { useEffect } from "react";
 
 function NavItem({
   to,
