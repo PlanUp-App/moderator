@@ -197,15 +197,17 @@ function ReportDetailPage() {
       <div className="h-px bg-neutral-100" />
 
       {/* Take action */}
-      {report.status !== "RESOLVED" && report.status !== "DISMISSED" && (
+      {report.status && (
         <div className="flex flex-col gap-4 w-[50%]">
           <p className="pup-body-lg-500 text-neutral-black">Take action</p>
 
-          {report.status === "PENDING" ? (
+          {report.status !== "UNDER_REVIEW" ? (
             <div>
               <PrimaryButton
                 onClick={() => handleStatusChange("UNDER_REVIEW")}
-                title="Start Review"
+                title={
+                  report.status === "PENDING" ? "Start Review" : "Update Status"
+                }
                 isLoading={statusMutation.isPending}
               />
             </div>
